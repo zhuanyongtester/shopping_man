@@ -7,11 +7,15 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../common/colors.dart';
 import '../common/constant.dart';
 import '../model/home_tools.dart';
+import '../res/styles.dart';
 import '../route/fluro_navigator.dart';
 import '../utils/repository_utils.dart';
 import '../utils/toast_utils.dart';
+import '../widget/card_view.dart';
 import '../widget/common_search_bar.dart';
 import '../widget/header/home_wallpaper_header.dart';
+import '../widget/home_common_card.dart';
+import '../widget/main/main_widgets.dart';
 
 
 
@@ -175,6 +179,7 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         margin: EdgeInsets.only(top: 13, bottom: 30),
         child: CardView(
+
           margin: EdgeInsets.only(
             left: 17,
             right: 17,
@@ -201,7 +206,7 @@ class _HomePageState extends State<HomePage> {
                 // 运动训练
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     title: bottomCards[index].name,
                     iconUrl: "ic_home_sport",
@@ -217,50 +222,52 @@ class _HomePageState extends State<HomePage> {
                 // 围度记录
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_circumference",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
+
+
               } else if (bottomCards[index].code == HomeCard.STEPS_RECORD) {
                 // 步数记录
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_step",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
               } else if (bottomCards[index].code == HomeCard.BABY) {
                 // 宝宝记录
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_baby",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
               } else if (bottomCards[index].code == HomeCard.DIET_PLAN) {
                 // 饮食计划
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_food_plan",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
               } else if (bottomCards[index].code == HomeCard.SLEEP_RECORD) {
                 // 睡眠记录
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_sleep",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
               } else if (bottomCards[index].code == HomeCard.PERIODS_RECORD) {
                 // 经期记录
                 widget = CommonCard(
                     onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name);
+                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
                     },
                     iconUrl: "ic_home_menstruation",
-                    title: bottomCards[index].name);
+                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
               }
               return widget;
             },
