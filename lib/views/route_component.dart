@@ -2,6 +2,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:publiccomment/views/main_page.dart';
 import '../route/application.dart';
 import '../route/routes.dart';
 import '../splash_page.dart';
@@ -23,7 +24,7 @@ class _RouteComponentState extends State<RouteComponent> {
     return MaterialApp(
       theme: ThemeData(
           primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
-      home: SplashPage(),
+      home: MainPage(),
     );
   }
 }

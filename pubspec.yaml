@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  # 刷新控件
+  flutter_easyrefresh: ^2.0.4
   # bean对象
   json_annotation: ^4.9.0
   #路由
@@ -49,7 +50,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  build_runner: ^2.1.7
+  json_serializable: ^6.9.0
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
