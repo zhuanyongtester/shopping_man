@@ -1,0 +1,69 @@
+
+import 'package:fluro/fluro.dart';
+import 'package:flutter/material.dart';
+import 'package:publiccomment/route/routes.dart';
+
+import '../utils/base64_utils.dart';
+import 'application.dart';
+
+/// fluro的路由跳转工具类
+class NavigatorUtils {
+  static push(BuildContext context, String path,
+      {bool replace = false, bool clearStack = false}) {
+    Application.router.navigateTo(context, path,
+        replace: replace,
+        clearStack: clearStack,
+        transition: TransitionType.native);
+  }
+
+  static pushResult(
+      BuildContext context, String path, Function(Object) function,
+      {bool replace = false, bool clearStack = false}) {
+    Application.router
+        .navigateTo(context, path,
+        replace: replace,
+        clearStack: clearStack,
+        transition: TransitionType.native)
+        .then((result) {
+      // 页面返回result为null
+      if (result == null) {
+        return;
+      }
+      function(result);
+    }).catchError((error) {
+      print("$error");
+    });
+  }
+
+  /// 返回
+  static void goBack(BuildContext context) {
+    Navigator.pop(context);
+  }
+
+  /// 通用的浏览器page
+  static void goBrowserPage(BuildContext context, String url) {
+    /// 这里使用替换/主要是路由不支持链接中带有/和&，否则会出错
+    url = Base64.encodeBase64(url).replaceAll("/", "Chen*boohee");
+    Application.router.navigateTo(context, '${Routes.webView}?web_url=$url',
+        replace: false,
+        clearStack: false,
+        transition: TransitionType.inFromBottom);
+  }
+
+  /// 壁纸
+  static void goWallPaper(BuildContext context, String imageUrl) {
+    /// 这里使用替换/主要是路由不支持链接中带有/和&，否则会出错
+    imageUrl = Base64.encodeBase64(imageUrl).replaceAll("/", "Chen*boohee");
+    Application.router.navigateTo(
+        context, '${Routes.wallPaper}?image_url=$imageUrl',
+        replace: false,
+        clearStack: false,
+        transition: TransitionType.custom,
+        transitionBuilder: Routes.transitionTopToBottom());
+  }
+
+  /// 带参数返回
+  static void goBackWithParams(BuildContext context, result) {
+    Navigator.pop(context, result);
+  }
+}
