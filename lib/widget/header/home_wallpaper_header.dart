@@ -31,7 +31,7 @@ class WallPaperHeader extends Header {
       double refreshIndicatorExtent,
       AxisDirection axisDirection,
       bool float,
-      Duration completeDuration,
+      Duration? completeDuration, // 修复：改为可选类型
       bool enableInfiniteRefresh,
       bool success,
       bool noMore) {
@@ -54,13 +54,14 @@ class WallPaperHeader extends Header {
       key: key,
     );
   }
+
 }
 
 class WallPaperHeaderPage extends StatefulWidget {
   final String wallPaperUrl;
   final LinkHeaderNotifier linkNotifier;
 
-  WallPaperHeaderPage({required this.wallPaperUrl, required Key key, this.linkNotifier})
+  WallPaperHeaderPage({required this.wallPaperUrl, required Key key, required this.linkNotifier})
       : super(key: key);
 
   @override

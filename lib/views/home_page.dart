@@ -7,6 +7,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../common/colors.dart';
 import '../common/constant.dart';
 import '../model/home_tools.dart';
+import '../model/home_wall_paper.dart';
 import '../res/styles.dart';
 import '../route/fluro_navigator.dart';
 import '../utils/repository_utils.dart';
@@ -17,9 +18,6 @@ import '../widget/header/home_wallpaper_header.dart';
 import '../widget/home_common_card.dart';
 import '../widget/main/main_widgets.dart';
 
-
-
-
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomePageState();
@@ -27,22 +25,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   /// 控制顶部搜索框的颜色
-  SearchBarController _searchBarController = new SearchBarController(
-      alpha: 0,
-      searchBarBg: Color(0x1FFFFFFF),
-      appbarTitleColor: colorA8ACBC,
-      appbarLeftIcon: "ic_search_grey",
-      appbarRightIcon: "ic_message_grey");
+  SearchBarController _searchBarController = SearchBarController(
+    alpha: 0,
+    searchBarBg: Color(0x1FFFFFFF),
+    appbarTitleColor: colorA8ACBC,
+    appbarLeftIcon: "ic_search_grey",
+    appbarRightIcon: "ic_message_grey",
+  );
 
   /// 是否需要设置渐变色
   bool _isNeedSetAlpha = false;
 
   /// 用于单独控制搜索框的状态
-  GlobalKey<SearchBarState> _mTitleKey = new GlobalKey();
+  GlobalKey<SearchBarState> _mTitleKey = GlobalKey();
 
   /// 顶部卡片
-  List<Data> topCards = List<Data>.empty();
-  List<Data> bottomCards = List<Data>.empty();
+  List<Data> topCards = [];
+  List<Data> bottomCards = [];
   List<String> topCardItems = [
     HomeCard.DIET_SPORT_RECORD,
     HomeCard.WISDOM,
@@ -51,104 +50,114 @@ class _HomePageState extends State<HomePage> {
   ];
 
   /// 滑动监听
-  ScrollController _controller = new ScrollController();
+  ScrollController _controller = ScrollController();
   double percent = 0.0;
+  HomeWallPaper? wallPaper;
 
   @override
   void initState() {
     super.initState();
     loadData();
-    //监听滚动事件，打印滚动位置
-    _searchBarController.value.alpha = 0;
+    // 监听滚动事件，调整搜索框样式
     _controller.addListener(() {
       if (_controller.offset < 0) {
         return;
       }
       if (_controller.offset < 100) {
-        // 变化头部颜色
         _isNeedSetAlpha = true;
         double alpha = _controller.offset / 100;
         _searchBarController.value.alpha = (255 * alpha).toInt();
-        _searchBarController.value.appbarTitleColor = colorA8ACBC;
-        _searchBarController.value.searchBarBg = Color(0x1FFFFFFF);
-        _searchBarController.value.appbarLeftIcon = "ic_search_grey";
-        _searchBarController.value.appbarRightIcon = "ic_message_grey";
-        _mTitleKey.currentState?.setState(() {}); // 刷新单个控件的状态,防止卡顿
-      } else {
-        /// 防止多次渲染
-        if (_isNeedSetAlpha) {
-          _searchBarController.value.appbarLeftIcon = "ic_search_white";
-          _searchBarController.value.appbarRightIcon = "ic_message_white";
-          _searchBarController.value.appbarTitleColor = Colors.white;
-          _searchBarController.value.searchBarBg = color0EB794;
-          _searchBarController.value.alpha = 255;
-          _mTitleKey.currentState?.setState(() {});
-          _isNeedSetAlpha = false;
-        }
+        _mTitleKey.currentState?.setState(() {});
+      } else if (_isNeedSetAlpha) {
+        _searchBarController.value.alpha = 255;
+        _isNeedSetAlpha = false;
+        _mTitleKey.currentState?.setState(() {});
       }
     });
   }
 
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        EasyRefresh.custom(
-          header: WallPaperHeader(
-              wallPaperUrl:
-              wallPaper != null ? wallPaper.welcomeImg.backImg : "", key: false),
-          scrollController: _controller,
-          onRefresh: () async {
-            NavigatorUtils.goWallPaper(
-                context, wallPaper != null ? wallPaper.welcomeImg.backImg : "");
-          },
-          slivers: <Widget>[
-            SliverToBoxAdapter(
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          EasyRefresh.custom(
+            header: WallPaperHeader(
+              wallPaperUrl: wallPaper?.welcomeImg?.backImg ?? "",
+              key: Key(""),
+            ),
+            scrollController: _controller,
+            onRefresh: () async {
+              NavigatorUtils.goWallPaper(
+                  context, wallPaper?.welcomeImg?.backImg ?? "");
+            },
+            slivers: <Widget>[
+              SliverToBoxAdapter(
                 child: HomeHeaderWidget(
-                  /// 壁纸+减肥进度条Widget
-                  wallImg:
-                  wallPaper != null ? wallPaper.welcomeImg.backImgSmall : "",
+                  wallImg: wallPaper?.welcomeImg?.backImg ?? "",
                   progressPercent: percent,
-                )),
-            SliverList(
+                ),
+              ),
+              SliverList(
                 delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      Widget widget;
-                      if (topCards[index].code == HomeCard.DIET_SPORT_RECORD) {
-                        /// 饮食运动记录
-                        widget = DietSportRecordWidget(
-                          topCard: topCards[index],
-                        );
-                      } else if (topCards[index].code == HomeCard.WISDOM) {
-                        /// 智慧营养师
-                        widget = WisdomWidget(
-                          topCard: topCards[index],
-                        );
-                      } else if (topCards[index].code == HomeCard.WEIGHT_RECORD) {
-                        /// 体重记录
-                        widget = WeightRecordWidget(
-                          topCard: topCards[index],
-                        );
-                      } else if (topCards[index].code == HomeCard.HEALTH_HABITS) {
-                        widget = HealthHabitsWidget(
-                          iconUrl: "ic_home_habit",
-                          title: "健康习惯",
-                        );
-                      }
-                      return widget;
-                    }, childCount: topCards.length)),
-            createToolsCards()
-          ],
-        ),
-        SearchBar(
-          text: "搜索食物和热量",
-          controller: _searchBarController,
-          key: _mTitleKey,
-        )
-      ],
+                      (BuildContext context, int index) {
+                    // Initialize widget with a default value
+                    Widget widget = Container(); // Default value (empty container)
+
+                    if (topCards[index].code == HomeCard.DIET_SPORT_RECORD) {
+                      widget = DietSportRecordWidget(topCard: topCards[index]);
+                    } else if (topCards[index].code == HomeCard.WISDOM) {
+                      widget = WisdomWidget(topCard: topCards[index]);
+                    } else if (topCards[index].code == HomeCard.WEIGHT_RECORD) {
+                      widget = WeightRecordWidget(topCard: topCards[index]);
+                    } else if (topCards[index].code == HomeCard.HEALTH_HABITS) {
+                      widget = HealthHabitsWidget(
+                        iconUrl: "ic_home_habit",
+                        title: "健康习惯",
+                      );
+                    }
+                    return widget;
+                  },
+                  childCount: topCards.length,
+                ),
+              ),
+              createToolsCards(),
+            ],
+          ),
+          Positioned(
+            top: 0, // 放置位置
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.white, // 搜索框背景颜色
+              child: Row(
+                children: [
+                  Expanded(
+                      child:TextField(
+                        decoration: InputDecoration(
+                          hintText: "搜索食物和热量",
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide.none,
+                          )
+                        ),
+                        enabled: true,
+
+                      )
+                  )
+                ],
+              ),
+
+            ),
+          )
+        ],
+      ),
     );
   }
-  /// 壁纸、底部定制tab数据
+
+
+  /// 加载数据
   void loadData() {
     Repository.loadAsset("home_health_tools", fileDir: "home").then((json) {
       HomeTools homeTools = HomeTools.fromJson(Repository.toMap(json));
@@ -164,14 +173,29 @@ class _HomePageState extends State<HomePage> {
       wallPaper = HomeWallPaper.fromJson(Repository.toMapForList(json));
       setState(() {});
     });
-    // 体重记录圆环动画
-    Observable.just(3).delay(new Duration(milliseconds: 3 * 1000)).listen((_) {
+    // 设置体重记录圆环动画
+    Future.delayed(Duration(seconds: 3), () {
       percent = 0.8;
       setState(() {});
     });
   }
 
-  HomeWallPaper wallPaper;
+  /// 构建顶部卡片
+  Widget buildTopCardWidget(int index) {
+    final card = topCards[index];
+    switch (card.code) {
+      case HomeCard.DIET_SPORT_RECORD:
+        return DietSportRecordWidget(topCard: card);
+      case HomeCard.WISDOM:
+        return WisdomWidget(topCard: card);
+      case HomeCard.WEIGHT_RECORD:
+        return WeightRecordWidget(topCard: card);
+      case HomeCard.HEALTH_HABITS:
+        return HealthHabitsWidget(iconUrl: "ic_home_habit", title: "健康习惯");
+      default:
+        return SizedBox();
+    }
+  }
 
   /// 底部健康工具列表
   Widget createToolsCards() {
@@ -179,97 +203,30 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         margin: EdgeInsets.only(top: 13, bottom: 30),
         child: CardView(
-
-          margin: EdgeInsets.only(
-            left: 17,
-            right: 17,
-          ),
+          margin: EdgeInsets.symmetric(horizontal: 17),
+          key: Key('unique_key'),
+          onPressed: () {  },
           child: ListView.separated(
             shrinkWrap: true,
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 0.0,
-                margin: EdgeInsetsDirectional.only(start: 16, end: 16),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom:
-                    Divider.createBorderSide(context, color: colorEEEFF3),
-                  ),
-                ),
-              );
-            },
-            padding: EdgeInsets.only(top: 0),
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              Widget widget;
-              if (bottomCards[index].code == HomeCard.EXERCISE) {
-                // 运动训练
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    title: bottomCards[index].name,
-                    iconUrl: "ic_home_sport",
-                    subWidget: RichText(
-                      text: TextSpan(children: <TextSpan>[
-                        TextSpan(
-                            text: "35 ", style: TextStyles.get11Text_00CDA2()),
-                        TextSpan(
-                            text: "分钟", style: TextStyles.get11TextA8ACBC()),
-                      ]),
-                    ));
-              } else if (bottomCards[index].code == HomeCard.MEASURE_RECORD) {
-                // 围度记录
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_circumference",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-
-
-              } else if (bottomCards[index].code == HomeCard.STEPS_RECORD) {
-                // 步数记录
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_step",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-              } else if (bottomCards[index].code == HomeCard.BABY) {
-                // 宝宝记录
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_baby",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-              } else if (bottomCards[index].code == HomeCard.DIET_PLAN) {
-                // 饮食计划
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_food_plan",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-              } else if (bottomCards[index].code == HomeCard.SLEEP_RECORD) {
-                // 睡眠记录
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_sleep",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-              } else if (bottomCards[index].code == HomeCard.PERIODS_RECORD) {
-                // 经期记录
-                widget = CommonCard(
-                    onPressed: () {
-                      ToastUtils.showToast(context, bottomCards[index].name,duration: 0,gravity: 2);
-                    },
-                    iconUrl: "ic_home_menstruation",
-                    title: bottomCards[index].name, subWidget: Text("Sub Widget Here"),);
-              }
-              return widget;
+              final card = bottomCards[index];
+              return CommonCard(
+                onPressed: () {
+                  ToastUtils.showToast(context, card.name,duration: 0,gravity: 2);
+                },
+                title: card.name,
+                iconUrl: "ic_home_${card.code.toLowerCase()}", subWidget: SizedBox.shrink(),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return Divider(
+                height: 0,
+                thickness: 1,
+                color: colorEEEFF3,
+                indent: 16,
+                endIndent: 16,
+              );
             },
             itemCount: bottomCards.length,
           ),
@@ -280,7 +237,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    //为了避免内存泄露，需要调用_controller.dispose
     _controller.dispose();
     _searchBarController.dispose();
     super.dispose();

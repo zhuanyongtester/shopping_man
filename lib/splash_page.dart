@@ -86,7 +86,7 @@ class _SplashPageState extends State<SplashPage>{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Image.asset(
-                          Utils.getImgPath("ic_boohee_logo"),
+                          Utils.getImgPath("ic_logo"),
                           height: 35,
                           width: 35,
                         ),

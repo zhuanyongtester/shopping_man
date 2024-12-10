@@ -16,33 +16,40 @@ import 'auto_size_config.dart';
 ///
 void runAutoSizeApp(Widget app, {required double width, required double height}) {
   AutoSizeConfig.setDesignWH(width: width, height: height);
-  AutoSizeWidgetsFlutterBinding.ensureInitialized()
-    ..attachRootWidget(app)
-    ..scheduleWarmUpFrame();
+
+  AutoSizeWidgetsFlutterBinding.ensureInitialized().attachRootWidget(
+    MediaQuery(
+      data: MediaQueryData(size: Size(width, height)),
+      child: app,
+    ),
+  );
+  AutoSizeWidgetsFlutterBinding.ensureInitialized().scheduleWarmUpFrame();
 }
 
 /// AutoSize.
 class AutoSize {
-  /// 获取适配后的屏幕尺寸
+  /// getSize.
   static Size getSize() {
-    final Size size = PlatformDispatcher.instance.views.first.physicalSize;
+    final Size size = window.physicalSize;
     if (size == Size.zero) return size;
-
     final Size autoSize = size.width > size.height
         ? new Size(size.width / getPixelRatio(), AutoSizeConfig.designWidth)
         : new Size(AutoSizeConfig.designWidth, size.height / getPixelRatio());
     return autoSize;
   }
 
-  /// 获取适配后的像素密度
+  /// 获取适配后的像素密度。
+  /// get the adapted pixel density.
   static double getPixelRatio() {
-    final Size size = PlatformDispatcher.instance.views.first.physicalSize;
-    return (size.width > size.height ? size.height : size.width) / AutoSizeConfig.designWidth;
+    final Size size = window.physicalSize;
+    return (size.width > size.height ? size.height : size.width) /
+        AutoSizeConfig.designWidth;
   }
 }
 
 /// A concrete binding for applications based on the Widgets framework.
 ///
+/// This is the glue that binds the framework to the Flutter engine.
 /// This is the glue that binds the framework to the Flutter engine.
 class AutoSizeWidgetsFlutterBinding extends WidgetsFlutterBinding {
   /// 确保绑定已初始化
