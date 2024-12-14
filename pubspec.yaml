@@ -30,7 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0  # 推荐明确指定版本号，根据当前最新版本号更新
 
+  geolocator: ^10.0.0       # 获取经纬度
+  geocoding: ^2.1.0         # 将经纬度转换为地址
   percent_indicator: ^4.2.2  # Use the latest version available
   # 刷新控件
   flutter_easyrefresh: ^2.0.4
@@ -72,6 +77,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
   assets:
     - assets/json/discover/discover_sub.json
     - assets/json/common/splash_ad.json
@@ -151,3 +157,5 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat-Bold.otf
+flutter_intl:
+  enabled: true

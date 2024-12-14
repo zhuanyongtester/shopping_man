@@ -1,5 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:publiccomment/views/manger/ForgotPassword_page.dart';
+import 'package:publiccomment/views/manger/Privacy_Page.dart';
+import 'package:publiccomment/views/manger/Register_page.dart';
 
 import '../views/common/browser_page.dart';
 import '../views/common/wallpaper_page.dart';
@@ -17,6 +20,24 @@ var rootHandler = Handler(
 var loginHandler = Handler(
   handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     return LoginPage();
+  },
+);
+// 忘记密码
+var forgotPasswordHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return ForgotPassWordPage();
+  },
+);
+// 注册账号
+var registerHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return RegisterPage();
+  },
+);
+// 网络协议
+var PrivacyNetworkHandler = Handler(
+  handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+    return PrivacyNetWorkPage();
   },
 );
 
