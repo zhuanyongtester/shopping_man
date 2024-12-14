@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0  # 推荐明确指定版本号，根据当前最新版本号更新
+
 
   percent_indicator: ^4.2.2  # Use the latest version available
   # 刷新控件
@@ -72,6 +76,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
   assets:
     - assets/json/discover/discover_sub.json
     - assets/json/common/splash_ad.json
@@ -151,3 +156,5 @@ flutter:
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat-Bold.otf
+flutter_intl:
+  enabled: true

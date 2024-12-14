@@ -19,16 +19,25 @@ class Routes {
 
   /// 登陆
   static String login = "/login";
-
+  /// 忘记密码
+  static String forgotPassword = "/forgot";
+  /// 注册账号
+  static String register = "/register";
+  /// 网络协议
+  static String privacy = "/privacy";
   /// WebView
   static String webView = "/browserweb";
 
   /// 壁纸
   static String wallPaper = "/wallPaper";
 
+
   static void configureRoutes(FluroRouter router) {
     router.define(root, handler: rootHandler);
     router.define(login, handler: loginHandler);
+    router.define(forgotPassword, handler: forgotPasswordHandler);
+    router.define(register, handler: registerHandler);
+    router.define(privacy, handler: PrivacyNetworkHandler);
     router.define(webView, handler: webViewHandler);
     router.define(wallPaper, handler: wallPaperHandler);
   }

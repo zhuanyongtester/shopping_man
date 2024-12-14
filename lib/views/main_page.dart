@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:publiccomment/views/shop_pages/shop_page.dart';
 
 import '../common/colors.dart';
@@ -80,7 +81,7 @@ class _MainPageState extends State<StatefulWidget> with SingleTickerProviderStat
         if (_lastPressedAt == null ||
             DateTime.now().difference(_lastPressedAt) > Duration(seconds: 2)) {
           _lastPressedAt = DateTime.now();
-          ToastUtils.showToast(context, "再按一次返回退出APP", duration: 0, gravity: 2);
+          ToastUtils.showToast(context, "再按一次返回退出APP", duration: 0, gravity: ToastGravity.BOTTOM);
           return false;
         }
         return true;
@@ -90,7 +91,7 @@ class _MainPageState extends State<StatefulWidget> with SingleTickerProviderStat
 
   void _onItemTapped(int index) {
     if (index == 2) {
-      ToastUtils.showToast(context, "暂无", duration: 0, gravity: 2);
+      ToastUtils.showToast(context, "暂无", duration: 0, gravity: ToastGravity.BOTTOM);
       return;
     }
     setState(() {

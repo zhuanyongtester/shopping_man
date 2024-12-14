@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../common/colors.dart';
 import '../common/constant.dart';
@@ -213,7 +214,7 @@ class _HomePageState extends State<HomePage> {
               final card = bottomCards[index];
               return CommonCard(
                 onPressed: () {
-                  ToastUtils.showToast(context, card.name,duration: 0,gravity: 2);
+                  ToastUtils.showToast(context, card.name,duration: 0,gravity: ToastGravity.BOTTOM);
                 },
                 title: card.name,
                 iconUrl: "ic_home_${card.code.toLowerCase()}", subWidget: SizedBox.shrink(),

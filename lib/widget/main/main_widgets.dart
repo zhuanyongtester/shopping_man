@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../common/colors.dart';
 import '../../model/home_tools.dart';
@@ -301,7 +302,7 @@ class WeightRecordWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardView(
       onPressed: () {
-        ToastUtils.showToast(context, topCard.name,duration: 0,gravity: 2);
+        ToastUtils.showToast(context, topCard.name,duration: 0,gravity: ToastGravity.BOTTOM);
       },
       margin: EdgeInsets.only(left: 17, right: 17, top: 13),
       key: Key('unique_key'),
@@ -376,7 +377,7 @@ class HealthHabitsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CardView(
       onPressed: () {
-        ToastUtils.showToast(context, title,duration: 0,gravity: 2);
+        ToastUtils.showToast(context, title,duration: 0,gravity: ToastGravity.BOTTOM);
       },
       margin: EdgeInsets.only(left: 17, right: 17, top: 13),
       key: Key('unique_key'),
